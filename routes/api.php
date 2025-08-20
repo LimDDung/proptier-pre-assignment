@@ -24,10 +24,10 @@ Route::prefix('v1')->group(function () {
     #회원 API
     Route::prefix('users')->group(function () {
         Route::post('sign-up', [UserController::class, 'signUp']); //회원가입
-        Route::get('/', [UserController::class, 'index']); //회원조회
+        //Route::get('/', [UserController::class, 'index']); //회원조회
         #Route::get('/', [UserController::class, 'index']); //회원정보수정
         #Route::get('/', [UserController::class, 'index']); //회원탈퇴
-        #Route::get('/', [UserController::class, 'index']); //회원가입
+
     });
 
     #게시판 API
