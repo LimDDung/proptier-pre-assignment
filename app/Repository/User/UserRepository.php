@@ -13,14 +13,14 @@ class UserRepository
      * @return object
      * @throws \Exception 예외 발생 시 처리 (필요 시 throw 가능)
      */
-    public function usersCreate(array $params): object
+    public function usersCreate(array $params)
     {
         try {
 
-            return User::insertGetId($params);
+            return User::create($params)->id;
 
-        }catch (Exception $e){
-            return 1;
+        }catch (\Throwable $e){
+            throw $e;
         }
 
     }
