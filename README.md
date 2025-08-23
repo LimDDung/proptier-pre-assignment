@@ -21,7 +21,7 @@
 flowchart TD
     A[Client Request] --> B[Laravel Router]
     B --> C[Controller]
-    C --> S[Service (Business Logic)]
+    C --> S["Service/BusinessLogic"]
     S --> R[Repository]
     R --> D[Eloquent Model]
     D --> E[(MariaDB Database)]
