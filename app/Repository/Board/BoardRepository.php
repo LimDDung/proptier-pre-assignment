@@ -5,6 +5,7 @@ use App\Models\Board;
 use App\Models\BoardComment;
 use App\Models\BoardLike;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class BoardRepository
 {
@@ -167,25 +168,107 @@ class BoardRepository
      */
     public function toggleBoardLike(array $params)
     {
-        $ck = BoardLike::where('board_id', $params['board_id'])
-            ->where('user_id', $params['user_id'])
-            ->first();
 
-        // 이미 좋아요 했다면 삭제
-        if ($ck) {
-            $ck->delete();
-            return false;
+        try {
+            $ck = BoardLike::where('board_id', $params['board_id'])
+                ->where('user_id', $params['user_id'])
+                ->first();
+
+            // 이미 좋아요 했다면 삭제
+            if ($ck) {
+                $ck->delete();
+                return false;
+            }
+
+            // 신규 라면 좋아요 처리
+            BoardLike::create([
+                'board_id'   => $params['board_id'],
+                'user_id'    => $params['user_id'],
+                'ip_address' => $params['ip_address'],
+            ]);
+
+            return true;
+        }catch (\Throwable $e){
+
         }
 
-        // 신규 라면 좋아요 처리
-        BoardLike::create([
-            'board_id'   => $params['board_id'],
-            'user_id'    => $params['user_id'],
-            'ip_address' => $params['ip_address'],
-        ]);
-
-        return true;
     }
+
+    /**
+     * 게시글 댓글 등록
+     *
+     * @param array $params 파라미터
+     * @return object
+     * @throws \Throwable
+     */
+    public function boardCommentCreate(array $params)
+    {
+        try {
+
+            return BoardComment::create($params);
+
+        }catch (\Throwable $e){
+            throw  $e;
+        }
+    }
+
+    /**
+     * 게시글 댓글 조회
+     *
+     * @param array $params 파라미터
+     * @return object
+     * @throws \Throwable
+     */
+    public function findCommentById(int $id): ?BoardComment
+    {
+        return BoardComment::find($id);
+    }
+
+    /**
+     * 게시글 모든 댓글 가져오기
+     *
+     * @param int $boardId
+     * @return object
+     * @throws \Throwable
+     */
+    public function getBoardComment(int $boardId)
+    {
+        try {
+            return BoardComment::selectRaw('*, HEX(path_bin) as path_hex')
+                ->where('board_id', $boardId)
+                ->orderBy('path_bin')
+                ->get();
+        }catch (\Throwable $e){
+            throw $e;
+        }
+
+
+    }
+
+    /**
+     * 게시글 다음 댓글 순번  세그먼트 정리
+     *
+     * @param int $boardId 게시글 id
+     * @param int $parentId 부모댓글 id
+     * @return object
+     * @throws \Throwable
+     */
+    public function boardCommentNextSiblingSeq(int $boardId, int $parentId)
+    {
+        try {
+            $max = BoardComment::where('board_id', $boardId)
+                ->when($parentId, fn($q) => $q->where('parent_id', $parentId),
+                    fn($q) => $q->whereNull('parent_id'))
+                ->max(DB::raw("CONV(HEX(RIGHT(path_bin, 4)), 16, 10)"));
+
+            return (int)($max ?? 0) + 1;
+
+        }catch (\Throwable $e){
+            throw $e;
+        }
+
+    }
+
 
 
 }

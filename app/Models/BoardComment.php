@@ -12,6 +12,7 @@ class BoardComment extends Model
         "user_id",
         "parent_id",
         "depth",
+        "path_bin",
         "content",
     ];
 }

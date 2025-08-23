@@ -39,7 +39,9 @@ Route::prefix('v1')->group(function () {
             Route::put('/{id}', [BoardController::class, 'boardUpdate']); // 게시글 수정
             Route::delete('/{id}', [BoardController::class, 'boardDelete']); // 게시글 삭제
             Route::post('/like', [BoardController::class, 'boardLikeCreate']);//게시글 좋아요 등록/해제
-            //Route::post('/{id}', [BoardController::class, 'boardDelete']);//게시글 댓글
+            Route::post('/comment/{id}', [BoardController::class, 'boardComment']);//게시글 댓글 등록
+            Route::get('/comment/{id}', [BoardController::class, 'boardCommentGet']);//게시글 댓글 조회
+
         });
 
     });

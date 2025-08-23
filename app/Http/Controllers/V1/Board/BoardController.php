@@ -137,16 +137,65 @@ class BoardController extends Controller
      */
     public function boardLikeCreate(Request $request): JsonResponse
     {
-        $boardId = (int) $request->input('board_id');
-        if (!$boardId) {
-            return $this->apiResponse(
-                Response::HTTP_UNPROCESSABLE_ENTITY,
-                422,
-                'board_id는 필수 값입니다.'
-            );
+
+        $validator = Validator::make($request->all(), [
+            'board_id'   => ['required','string','min:1'],
+        ], [
+            'board_id.required' => '게시글 ID는 필수입니다.',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->apiResponse(Response::HTTP_UNPROCESSABLE_ENTITY, 500, '입력값 검증 실패', $validator->errors());
         }
 
         $rt = $this->boardService->toggleBoardLike($request);
+        $code = $rt['code'];
+        $message = $rt['message'];
+        $data = $rt['data'] ?? [];
+
+        return $this->apiResponse(Response::HTTP_CREATED, $code, $message, $data);
+    }
+
+    /**
+     * 게시글 댓글 등록
+     *
+     * @param Request $request HTTP 요청 객체
+     *
+     * @return JsonResponse 결과응답
+     */
+    public function boardComment(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'content'   => ['required','string','min:1'],
+        ], [
+            'content.required' => '댓글 내용을 입력해주세요.',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->apiResponse(Response::HTTP_UNPROCESSABLE_ENTITY, 500, '입력값 검증 실패', $validator->errors());
+        }
+
+        $rt = $this->boardService->createComment($request);
+        $code = $rt['code'];
+        $message = $rt['message'];
+        $data = $rt['data'] ?? [];
+
+        return $this->apiResponse(Response::HTTP_CREATED, $code, $message, $data);
+    }
+
+
+    /**
+     * 게시글 댓글 조회
+     *
+     * @param Request $request HTTP 요청 객체
+     *
+     * @return JsonResponse 결과응답
+     */
+    public function boardCommentGet(Request $request)
+    {
+
+        $rt = $this->boardService->getBoardComments($request);
         $code = $rt['code'];
         $message = $rt['message'];
         $data = $rt['data'] ?? [];

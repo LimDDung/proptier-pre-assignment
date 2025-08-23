@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 0001_01_01_000000_create_users_table
+
         Schema::create('boards', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')

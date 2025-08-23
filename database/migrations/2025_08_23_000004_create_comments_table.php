@@ -27,21 +27,24 @@ return new class extends Migration {
             $table->unsignedBigInteger('parent_id')->nullable()->comment('부모 댓글 id');
 
             $table->unsignedSmallInteger('depth')->default(0)->comment('댓글 뎁스');
+            $table->binary('path_bin')->nullable()->comment("댓글 정렬");
 
             $table->text('content')->comment('댓글 내용');
             $table->timestamps();
 
-            // 안전한 인덱스 (path 안 씀)
-            $table->index(['board_id', 'created_at'], 'idx_board_comments_board_created');
+            //$table->index(['board_id', 'path_bin'], 'idx_board_comments_board_path_bin');
+
         });
 
 
-        // 자기참조 FK는 테이블이 만들어진 후에 추가 (MySQL에서 안전)
+        // 자기참조 FK는 테이블이 만들어진 후에 추가
         Schema::table('board_comments', function (Blueprint $table) {
             $table->foreign('parent_id')
-                ->references('id')->on('board_comments')
+                ->references('id')
+                ->on('board_comments')
                 ->cascadeOnDelete();
         });
+
 
     }
 
