@@ -1,10 +1,8 @@
 # proptier-pre-assignment
 프롭티어 사전 과제
 
-
 ## Description
-이 프로젝트는 Laravel 12 이상과 PHP 8.1+ 환경에서 동작하는 회원기능 및  게시판 API를 구현하는 사전 과제입니다.
-CRUD 기본기, 데이터베이스 모델링, API 문서 작성 능력을 확인하는 것이 목적입니다.
+이 프로젝트는 Laravel 12 이상과 PHP 8.1+ 환경에서 동작하는 회원기능 및 게시판 API를 구현하는 사전 과제입니다.
 
 
 구현 범위:
@@ -16,6 +14,26 @@ CRUD 기본기, 데이터베이스 모델링, API 문서 작성 능력을 확인
 - 요청 데이터 유효성 검사
 - 공통 JSON 응답 포맷 적용
 
+---
+
+## Visuals
+```mermaid
+flowchart TD
+    A[Client Request] --> B[Laravel Router]
+    B --> C[Controller]
+    C --> S[Service (Business Logic)]
+    S --> R[Repository]
+    R --> D[Eloquent Model]
+    D --> E[(MariaDB Database)]
+    E --> D
+    D --> R
+    R --> S
+    S --> C
+    C --> F[JSON Response]
+```
+
+
+---
 
 # Steps
 ```bash
@@ -33,7 +51,7 @@ php artisan migrate
 php artisan migrate:fresh
 
 # 4. 서버 실행
-php artisan serve[collection](postman/collection)
+php artisan serve
 ```
 
 ---
@@ -51,7 +69,7 @@ php artisan serve[collection](postman/collection)
 
 * **Language** : PHP 8.2
 * **Framework** : Laravel 12.x
-* **Database (RDBMS)** : MySQL 8.0
+* **Database (RDBMS)** : MariaDB 11.7.2
 * **Authentication** : Laravel Sanctum (Token 기반 인증)
 * **Password Hashing** : bcrypt
 * **ORM** : Eloquent ORM
@@ -60,3 +78,61 @@ php artisan serve[collection](postman/collection)
 
 ---
 
+## Database Table 설계도
+
+### `users`
+
+| 컬럼명         | 타입           | 제약조건             | 설명      |
+| ----------- | ------------ | ---------------- | ------- |
+| id          | BIGINT (PK)  | Auto Increment   | 사용자 PK  |
+| userid      | VARCHAR(20)  | UNIQUE           | 로그인 아이디 |
+| password    | VARCHAR(255) | NOT NULL         | 비밀번호 해시 |
+| name        | VARCHAR(255) | NOT NULL         | 이름      |
+| email       | VARCHAR(255) | UNIQUE, NOT NULL | 이메일     |
+| created\_at | TIMESTAMP    |                  | 생성일     |
+| updated\_at | TIMESTAMP    |                  | 수정일     |
+
+---
+
+### `boards`
+
+| 컬럼명         | 타입           | 제약조건                        | 설명     |
+| ----------- | ------------ | --------------------------- | ------ |
+| id          | BIGINT (PK)  | Auto Increment              | 게시글 PK |
+| user\_id    | BIGINT (FK)  | users.id, ON DELETE CASCADE | 작성자    |
+| title       | VARCHAR(150) | INDEX (idx\_boards\_title)  | 제목     |
+| content     | LONGTEXT     | NOT NULL                    | 내용     |
+| created\_at | TIMESTAMP    |                             | 생성일    |
+| updated\_at | TIMESTAMP    |                             | 수정일    |
+
+---
+
+### `board_comments`
+
+| 컬럼명         | 타입                | 제약조건                                           | 설명       |
+| ----------- | ----------------- | ---------------------------------------------- | -------- |
+| id          | BIGINT (PK)       | Auto Increment                                 | 댓글 PK    |
+| board\_id   | BIGINT (FK)       | boards.id, ON DELETE CASCADE                   | 게시글 ID   |
+| user\_id    | BIGINT (FK)       | users.id, ON DELETE CASCADE                    | 작성자 ID   |
+| parent\_id  | BIGINT (FK, self) | board\_comments.id, ON DELETE CASCADE, NULL    | 부모 댓글 ID |
+| depth       | SMALLINT UNSIGNED | DEFAULT 0                                      | 댓글 뎁스    |
+| path\_bin   | VARBINARY(256)    | INDEX (idx\_board\_comments\_board\_path\_bin) | 댓글 정렬 경로 |
+| content     | TEXT              | NOT NULL                                       | 댓글 내용    |
+| created\_at | TIMESTAMP         |                                                | 생성일      |
+| updated\_at | TIMESTAMP         |                                                | 수정일      |
+
+---
+
+### `board_likes`
+
+| 컬럼명         | 타입                    | 제약조건                                   | 설명        |
+| ----------- | --------------------- | -------------------------------------- | --------- |
+| id          | BIGINT (PK)           | Auto Increment                         | 좋아요 PK    |
+| board\_id   | BIGINT (FK)           | boards.id, ON DELETE CASCADE           | 게시글 ID    |
+| user\_id    | BIGINT (FK)           | users.id, ON DELETE CASCADE            | 사용자 ID    |
+| ip\_address | VARCHAR(45)           | NULLABLE                               | 작성자 IP    |
+| created\_at | TIMESTAMP             |                                        | 생성일       |
+| updated\_at | TIMESTAMP             |                                        | 수정일       |
+| (unique)    | (board\_id, user\_id) | UNIQUE (uq\_board\_likes\_board\_user) | 중복 좋아요 방지 |
+
+---

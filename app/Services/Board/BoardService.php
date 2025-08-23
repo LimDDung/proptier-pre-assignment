@@ -389,7 +389,6 @@ class BoardService
             ];
 
         } catch (\Throwable $e) {
-
             Log::error('[게시글 댓글 등록 Error!!]', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),

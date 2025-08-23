@@ -249,11 +249,11 @@ class BoardRepository
      * 게시글 다음 댓글 순번  세그먼트 정리
      *
      * @param int $boardId 게시글 id
-     * @param int $parentId 부모댓글 id
+     * @param int|null $parentId 부모댓글 id
      * @return object
      * @throws \Throwable
      */
-    public function boardCommentNextSiblingSeq(int $boardId, int $parentId)
+    public function boardCommentNextSiblingSeq(int $boardId, ?int $parentId)
     {
         try {
             $max = BoardComment::where('board_id', $boardId)
