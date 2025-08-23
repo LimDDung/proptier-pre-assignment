@@ -9,7 +9,7 @@ use App\Http\Controllers\V1\Board\BoardController;
 Route::prefix('v1')->group(function () {
 
 
-    #로그인
+    #로그인 @@@@@@#@#@#@#@# 아이디 빌민번호 이셉션 잡으셈
     Route::post('/login', [AuthController::class, 'login']);
 
     #회원 API
@@ -30,11 +30,16 @@ Route::prefix('v1')->group(function () {
             Route::delete('me', [UserController::class, 'userDestroy']); //회원탈퇴
 
         });
-    });
 
+        #게시판 API
+        Route::prefix('board')->group(function () {
+            Route::post('/', [BoardController::class, 'boardCreate']); // 게시글생성
+            Route::get('/', [BoardController::class, 'boardLists']); // 게시글 목록조회
+            //Route::get('/{id}', [BoardController::class, 'asd']); // 게시글 상세조회
+            //Route::put('/{id}', [BoardController::class, 'asd']); // 게시글 수정
+            //Route::delete('/{id}', [BoardController::class, 'asd']); // 게시글 삭제
+        });
 
-    #게시판 API
-    Route::prefix('board')->group(function () {
     });
 
 });

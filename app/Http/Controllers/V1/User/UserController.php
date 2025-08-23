@@ -93,7 +93,6 @@ class UserController extends Controller
      */
     public function userModify(Request $request): JsonResponse
     {
-
         $user = $request->user();
 
         $validator = Validator::make($request->all(), [
@@ -103,7 +102,6 @@ class UserController extends Controller
         ], [
             'email.email' => '올바른 이메일 형식이 아닙니다.',
             'email.unique' => '이미 사용 중인 이메일 주소입니다.',
-
         ]);
 
         if ($validator->fails()) {
