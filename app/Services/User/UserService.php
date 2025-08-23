@@ -21,7 +21,7 @@ class UserService
      * @return array
      * @throws \Throwable
      */
-    public function createUser($request)
+    public function createUser($request): array
     {
 
         try{

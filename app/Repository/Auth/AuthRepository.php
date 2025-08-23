@@ -6,8 +6,12 @@ use App\Models\User;
 
 class AuthRepository
 {
-    public function findByUserid(string $userId): ?User
+    public function findByUserid(string $userId)
     {
-        return User::where('userid', $userId)->first();
+        try {
+            return User::where('userid', $userId)->first();
+        }catch (\Throwable $e){
+            throw $e;
+        }
     }
 }
