@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        // 0001_01_01_000000_create_users_table
+        Schema::create('boards', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->cascadeOnDelete()
+                ->comment('users.id pk 작성자 id')
+                ->index('idx_boards_user_id');
+            $table->string('title', 150)
+                ->index('idx_boards_title')
+                ->comment('제목');
+            $table->longText('content')->comment('내용');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('boards');
+    }
+};
