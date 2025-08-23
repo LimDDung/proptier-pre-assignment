@@ -62,4 +62,94 @@ class UserService
         }
 
     }
+
+    /**
+     * 회원정보 수정 로직 처리
+     *
+     * @param $request
+     * @return array
+     * @throws \Throwable
+     */
+    public function updateUser($request)
+    {
+        try {
+
+            $id = $request->user()->id;
+            $params =[];
+            if ($request->filled('name')) {
+                $params['name'] = $request->input('name');
+            }
+            if ($request->filled('email')) {
+                $params['email'] = $request->input('email');
+            }
+            if ($request->filled('password')) {
+                $params['password'] = $request->input('password');
+            }
+            $user = $this->userRepository->userUpdateById($id , $params);
+
+            return [
+                "code"    => 200,
+                "message" => "회원정보가 수정되었습니다.",
+                "data"    => [
+                    "id" => $user->id,
+                ],
+            ];
+
+        }catch (\Exception $e){
+
+            Log::error('[회원정보 수정 Error!!]', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return [
+                "code"    => 500,
+                "message" => "회원정보 수정중 오류 발생",
+                "data"    => null,
+            ];
+        }
+    }
+
+
+    /**
+     * 회원탈퇴 로직 처리
+     *
+     * @param $request
+     * @return array
+     * @throws \Throwable
+     */
+    public function destroyUser($request)
+    {
+
+        try {
+
+            $id = $request->user()->id;
+
+            # 회원탈퇴
+            $user = $this->userRepository->userDestroyById($id);
+
+            # 인증토큰 삭제
+            $request->user()->currentAccessToken()?->delete();
+
+            return [
+                "code"    => 200,
+                "message" => "회원탈퇴가 완료되었습니다.",
+                "data"    => null,
+            ];
+
+        }catch (\Exception $e){
+
+            Log::error('[회원탈퇴 Error!!]', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            return [
+                "code"    => 500,
+                "message" => "회원탈퇴중 오류 발생",
+                "data"    => null,
+            ];
+        }
+
+    }
 }

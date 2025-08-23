@@ -15,8 +15,6 @@ Route::prefix('v1')->group(function () {
     #회원 API
     Route::prefix('users')->group(function () {
         Route::post('sign-up', [UserController::class, 'signUp']); //회원가입
-        Route::get('/', [UserController::class, 'index']); //회원정보수정
-        #Route::get('/', [UserController::class, 'index']); //회원탈퇴
 
     });
 
@@ -26,6 +24,12 @@ Route::prefix('v1')->group(function () {
         #로그아웃
         Route::post('/logout', [AuthController::class, 'logout']);
 
+        Route::prefix('users')->group(function () {
+
+            Route::put('me', [UserController::class, 'userModify']); //회원정보수정
+            Route::delete('me', [UserController::class, 'userDestroy']); //회원탈퇴
+
+        });
     });
 
 

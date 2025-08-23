@@ -47,7 +47,7 @@ class AuthController extends Controller
         $message = $rt['message'];
         $data = $rt['data'] ?? [];
 
-        return $this->apiResponse(Response::HTTP_CREATED, $code, $message, $data);
+        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
     }
 
 
@@ -66,7 +66,7 @@ class AuthController extends Controller
         }
 
         $request->user()->currentAccessToken()?->delete();
-        return $this->apiResponse(Response::HTTP_CREATED, 200, '로그아웃되었습니다.', null);
+        return $this->apiResponse(Response::HTTP_OK, 200, '로그아웃되었습니다.', null);
     }
 
 }

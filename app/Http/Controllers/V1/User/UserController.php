@@ -84,4 +84,60 @@ class UserController extends Controller
 
     }
 
+    /**
+     * 회원정보 수정
+     *
+     * @param Request $request HTTP 요청 객체
+     *
+     * @return JsonResponse 결과응답
+     */
+    public function userModify(Request $request): JsonResponse
+    {
+
+        $user = $request->user();
+
+        $validator = Validator::make($request->all(), [
+            'name'     => ['sometimes','string','max:100'],
+            'email'    => ['sometimes','email','max:255','unique:users,email,'.$user->id],
+            'password' => ['sometimes','string','min:1'],
+        ], [
+            'email.email' => '올바른 이메일 형식이 아닙니다.',
+            'email.unique' => '이미 사용 중인 이메일 주소입니다.',
+
+        ]);
+
+        if ($validator->fails()) {
+            return $this->apiResponse(Response::HTTP_UNPROCESSABLE_ENTITY, 500, '입력값 검증 실패', $validator->errors());
+        }
+
+        $rt = $this->userService->updateUser($request);
+
+        $code = $rt['code'];
+        $message = $rt['message'];
+        $data = $rt['data'] ?? [];
+
+        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
+
+    }
+
+
+    /**
+     * 회원탈퇴
+     *
+     * @param Request $request HTTP 요청 객체
+     *
+     * @return JsonResponse 결과응답
+     */
+    public function userDestroy(Request $request): JsonResponse
+    {
+
+        $rt = $this->userService->destroyUser($request);
+
+        $code = $rt['code'];
+        $message = $rt['message'];
+        $data = $rt['data'] ?? [];
+
+        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
+    }
+
 }
