@@ -72,18 +72,36 @@ class BoardController extends Controller
 
 
     /**
+     * 게시글 상세조회
+     *
+     * @param Request $request HTTP 요청 객체
+     *
+     * @return JsonResponse 결과응답
+     */
+    public function boardDetail(Request $request): JsonResponse
+    {
+
+        $rt = $this->boardService->getBoardDetail($request);
+
+        $code = $rt['code'];
+        $message = $rt['message'];
+        $data = $rt['data'] ?? [];
+
+        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
+
+    }
+
+    /**
      * 게시글 수정
      *
      * @param Request $request HTTP 요청 객체
      *
      * @return JsonResponse 결과응답
      */
-    public function boardUpdate(Request $request, int $id): JsonResponse
+    public function boardUpdate(Request $request): JsonResponse
     {
-        $user = $request->user();
 
-        // 서비스에서 작성자 본인 여부 체크
-        $rt = $this->boardService->updateBoard($request, $id, $user);
+        $rt = $this->boardService->updateBoard($request);
         $code = $rt['code'];
         $message = $rt['message'];
         $data = $rt['data'] ?? [];
@@ -98,11 +116,37 @@ class BoardController extends Controller
      *
      * @return JsonResponse 결과응답
      */
-    public function boardDelete(Request $request, int $id): JsonResponse
+    public function boardDelete(Request $request): JsonResponse
     {
-        $user = $request->user();
 
-        $rt = $this->boardService->deleteBoard($id, $user);
+        $rt = $this->boardService->deleteBoard($request);
+        $code = $rt['code'];
+        $message = $rt['message'];
+        $data = $rt['data'] ?? [];
+
+        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
+    }
+
+
+    /**
+     * 게시글 좋아요 카운트 증가
+     *
+     * @param Request $request HTTP 요청 객체
+     *
+     * @return JsonResponse 결과응답
+     */
+    public function boardLikeCreate(Request $request): JsonResponse
+    {
+        $boardId = (int) $request->input('board_id');
+        if (!$boardId) {
+            return $this->apiResponse(
+                Response::HTTP_UNPROCESSABLE_ENTITY,
+                422,
+                'board_id는 필수 값입니다.'
+            );
+        }
+
+        $rt = $this->boardService->toggleBoardLike($request);
         $code = $rt['code'];
         $message = $rt['message'];
         $data = $rt['data'] ?? [];

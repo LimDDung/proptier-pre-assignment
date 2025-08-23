@@ -11,7 +11,7 @@ class UserRepository
      *
      * @param array $params 파라미터
      * @return object
-     * @throws \Exception 예외 발생 시 처리 (필요 시 throw 가능)
+     * @throws \Throwable
      */
     public function usersCreate(array $params)
     {
@@ -32,7 +32,7 @@ class UserRepository
      * @param int $id 유저pk
      * @param array $params 파라미터
      * @return object
-     * @throws \Exception 예외 발생 시 처리 (필요 시 throw 가능)
+     * @throws \Throwable
      */
     public function userUpdateById($id, array $params)
     {
@@ -62,7 +62,7 @@ class UserRepository
      *
      * @param int $id 유저pk
      * @return object
-     * @throws \Exception 예외 발생 시 처리 (필요 시 throw 가능)
+     * @throws \Throwable
      */
     public function userDestroyById($id)
     {

@@ -35,9 +35,11 @@ Route::prefix('v1')->group(function () {
         Route::prefix('board')->group(function () {
             Route::post('/', [BoardController::class, 'boardCreate']); // 게시글생성
             Route::get('/', [BoardController::class, 'boardLists']); // 게시글 목록조회
-            //Route::get('/{id}', [BoardController::class, 'asd']); // 게시글 상세조회
-            //Route::put('/{id}', [BoardController::class, 'asd']); // 게시글 수정
-            //Route::delete('/{id}', [BoardController::class, 'asd']); // 게시글 삭제
+            Route::get('/{id}', [BoardController::class, 'boardDetail']); // 게시글 상세조회
+            Route::put('/{id}', [BoardController::class, 'boardUpdate']); // 게시글 수정
+            Route::delete('/{id}', [BoardController::class, 'boardDelete']); // 게시글 삭제
+            Route::post('/like', [BoardController::class, 'boardLikeCreate']);//게시글 좋아요 등록/해제
+            //Route::post('/{id}', [BoardController::class, 'boardDelete']);//게시글 댓글
         });
 
     });
