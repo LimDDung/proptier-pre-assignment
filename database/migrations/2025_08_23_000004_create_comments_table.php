@@ -15,13 +15,11 @@ return new class extends Migration {
 
             $table->foreignId('board_id')
                 ->constrained('boards')
-                ->cascadeOnDelete()
-                ->comment('boards.id (게시글)');
+                ->cascadeOnDelete();
 
             $table->foreignId('user_id')
                 ->constrained('users')
-                ->cascadeOnDelete()
-                ->comment('users.id (작성자)');
+                ->cascadeOnDelete();
 
             // 자기참조 FK는 테이블 생성 후 별도로 붙일 예정
             $table->unsignedBigInteger('parent_id')->nullable()->comment('부모 댓글 id');
@@ -32,7 +30,7 @@ return new class extends Migration {
             $table->text('content')->comment('댓글 내용');
             $table->timestamps();
 
-            //$table->index(['board_id', 'path_bin'], 'idx_board_comments_board_path_bin');
+            $table->index(['board_id', DB::raw('path_bin(256)')], 'idx_board_comments_board_path_bin');
 
         });
 

@@ -34,10 +34,20 @@ class AuthService
             $userInfo = $this->authRepository->findByUserid($userId);
             //dd($userInfo); exit;
             if (!$userInfo ) {
-                throw new \Exception("존재하지 않는 아이디 입니다.");
+
+                return [
+                    "code"    => 500,
+                    "message" => "존재하지 않는 아이디 입니다.",
+                    "data"    => null,
+                ];
+
             }
             else if(Hash::check($password, $userInfo->password) === false){ //
-                throw new \Exception("비밀번호가 올바르지 않습니다.");
+                return [
+                    "code"    => 500,
+                    "message" => "비밀번호가 올바르지 않습니다.",
+                    "data"    => null,
+                ];
             }
 
             $token = $userInfo->createToken('api');

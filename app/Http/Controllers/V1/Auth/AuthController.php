@@ -26,7 +26,7 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
 
-        // 아이디 // 비밀번호 벨리데이션 체크
+        # 유효성체크
         $validator = Validator::make($request->all(), [
             'user_id' => ['required', 'string', 'min:12', 'max:20'],
             'password' => ['required', 'string', 'min:1'],
@@ -41,6 +41,7 @@ class AuthController extends Controller
             return $this->apiResponse(Response::HTTP_UNPROCESSABLE_ENTITY, 500, '입력값 검증 실패', $validator->errors());
         }
 
+        # 로그인
         $rt = $this->authService->signIn($request);
 
         $code = $rt['code'];
@@ -66,7 +67,7 @@ class AuthController extends Controller
         }
 
         $request->user()->currentAccessToken()?->delete();
-        return $this->apiResponse(Response::HTTP_OK, 200, '로그아웃되었습니다.', null);
+        return $this->apiResponse(Response::HTTP_CREATED, 200, '로그아웃되었습니다.', null);
     }
 
 }

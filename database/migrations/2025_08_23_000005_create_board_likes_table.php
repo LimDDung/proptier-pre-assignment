@@ -15,15 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('board_id')
                 ->constrained('boards')
-                ->cascadeOnDelete()
-                ->comment('boards.id (게시글)');
+                ->cascadeOnDelete();
             $table->foreignId('user_id')
                 ->constrained('users')
-                ->cascadeOnDelete()
-                ->comment('users.id (좋아요 누른 사용자)');
+                ->cascadeOnDelete();
             $table->string('ip_address', 45)->nullable()->comment('작성자 IP');
             $table->timestamps();
-
             $table->unique(['board_id','user_id'], 'uq_board_likes_board_user');
         });
     }

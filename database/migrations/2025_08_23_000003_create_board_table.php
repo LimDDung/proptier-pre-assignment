@@ -17,7 +17,6 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnDelete()
-                ->comment('users.id pk 작성자 id')
                 ->index('idx_boards_user_id');
             $table->string('title', 150)
                 ->index('idx_boards_title')
