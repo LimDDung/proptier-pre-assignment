@@ -85,6 +85,7 @@ php artisan serve
 ---
 
 ## Database Table 설계도
+![proptier_ERD.png](proptier_ERD.png)
 
 ### `users`
 
