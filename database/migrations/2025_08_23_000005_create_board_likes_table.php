@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignId('user_id')
                 ->constrained('users')
                 ->cascadeOnDelete();
-            $table->string('ip_address', 45)->nullable()->comment('작성자 IP');
             $table->timestamps();
             $table->unique(['board_id','user_id'], 'uq_board_likes_board_user');
         });

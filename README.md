@@ -136,7 +136,6 @@ php artisan serve
 | id          | BIGINT (PK)           | Auto Increment                         | 좋아요 PK    |
 | board\_id   | BIGINT (FK)           | boards.id, ON DELETE CASCADE           | 게시글 ID    |
 | user\_id    | BIGINT (FK)           | users.id, ON DELETE CASCADE            | 사용자 ID    |
-| ip\_address | VARCHAR(45)           | NULLABLE                               | 작성자 IP    |
 | created\_at | TIMESTAMP             |                                        | 생성일       |
 | updated\_at | TIMESTAMP             |                                        | 수정일       |
 | (unique)    | (board\_id, user\_id) | UNIQUE (uq\_board\_likes\_board\_user) | 중복 좋아요 방지 |

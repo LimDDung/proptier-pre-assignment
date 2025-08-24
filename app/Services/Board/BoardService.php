@@ -299,7 +299,6 @@ class BoardService
             $params = [
                 "board_id" => $request->id,
                 "user_id" => $request->user()->id,
-                "ip_address" => $request->ip(),
             ];
             $liked = $this->boardRepository->toggleBoardLike($params);
 

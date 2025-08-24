@@ -184,12 +184,11 @@ class BoardRepository
             BoardLike::create([
                 'board_id'   => $params['board_id'],
                 'user_id'    => $params['user_id'],
-                'ip_address' => $params['ip_address'],
             ]);
 
             return true;
         }catch (\Throwable $e){
-
+            throw $e;
         }
 
     }
@@ -221,7 +220,12 @@ class BoardRepository
      */
     public function findCommentById(int $id): ?BoardComment
     {
-        return BoardComment::find($id);
+        try {
+            return BoardComment::find($id);
+
+        }catch (\Throwable $e){
+            throw $e;
+        }
     }
 
     /**
