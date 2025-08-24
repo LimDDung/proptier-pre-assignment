@@ -297,7 +297,7 @@ class BoardService
 
             # 게시글 좋아요 등록/해제
             $params = [
-                "board_id" => $request->input("board_id"),
+                "board_id" => $request->id,
                 "user_id" => $request->user()->id,
                 "ip_address" => $request->ip(),
             ];

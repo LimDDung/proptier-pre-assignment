@@ -128,14 +128,13 @@ class UserController extends Controller
      */
     public function userDestroy(Request $request): JsonResponse
     {
-
         $rt = $this->userService->destroyUser($request);
 
         $code = $rt['code'];
         $message = $rt['message'];
         $data = $rt['data'] ?? [];
 
-        return $this->apiResponse(Response::HTTP_NO_CONTENT, $code, $message, $data);
+        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
     }
 
 }

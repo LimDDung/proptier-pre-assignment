@@ -124,7 +124,7 @@ class BoardController extends Controller
         $message = $rt['message'];
         $data = $rt['data'] ?? [];
 
-        return $this->apiResponse(Response::HTTP_NO_CONTENT, $code, $message, $data);
+        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
     }
 
 
@@ -138,15 +138,6 @@ class BoardController extends Controller
     public function boardLikeCreate(Request $request): JsonResponse
     {
 
-        $validator = Validator::make($request->all(), [
-            'board_id'   => ['required','string','min:1'],
-        ], [
-            'board_id.required' => '게시글 ID는 필수입니다.',
-        ]);
-
-        if ($validator->fails()) {
-            return $this->apiResponse(Response::HTTP_UNPROCESSABLE_ENTITY, 500, '입력값 검증 실패', $validator->errors());
-        }
 
         $rt = $this->boardService->toggleBoardLike($request);
         $code = $rt['code'];
