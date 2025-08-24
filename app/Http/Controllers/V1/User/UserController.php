@@ -135,7 +135,7 @@ class UserController extends Controller
         $message = $rt['message'];
         $data = $rt['data'] ?? [];
 
-        return $this->apiResponse(Response::HTTP_OK, $code, $message, $data);
+        return $this->apiResponse(Response::HTTP_NO_CONTENT, $code, $message, $data);
     }
 
 }
