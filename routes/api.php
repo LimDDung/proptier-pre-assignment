@@ -5,7 +5,7 @@ use App\Http\Controllers\V1\Auth\AuthController;
 use App\Http\Controllers\V1\User\UserController;
 use App\Http\Controllers\V1\Board\BoardController;
 
-
+// test
 Route::prefix('v1')->group(function () {
 
 
